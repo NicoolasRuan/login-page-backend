@@ -16,7 +16,7 @@ const sequelize = new Sequelize({
 app.use(express.json());
 app.use(cors());
 
-app.get("/oi", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Hello world" });
 });
 
