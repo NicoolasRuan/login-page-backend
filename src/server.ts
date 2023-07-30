@@ -17,7 +17,9 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send({ message: "Hello world" });
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "application/json");
+  res.json({ message: "Hello World" });
 });
 
 app.route("/users").post(UserController.create).get(UserController.listAll);
