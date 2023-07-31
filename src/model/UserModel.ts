@@ -1,7 +1,7 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
+import db from "../config/db";
 
-export const User = sequelize.define("User", {
+const User = db.define("Users", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -20,3 +20,5 @@ export const User = sequelize.define("User", {
     allowNull: false,
   },
 });
+
+export default User;

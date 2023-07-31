@@ -1,15 +1,15 @@
-import { Router, Request, Response } from "express";
-import { User } from "../model/UserModel";
+import { Request, Response } from "express";
+import User from "../model/UserModel";
 
 export default {
   listAll: async (req: Request, res: Response) => {
-    await User.sync();
     try {
       const users = await User.findAll();
 
-      console.log(`Todos os usuarios: ${users}`);
-      res.send(users);
-    } catch (error) {}
+      res.json(users);
+    } catch (error) {
+      res.json({ error: error });
+    }
   },
 
   create: async (req: Request, res: Response) => {
@@ -17,9 +17,26 @@ export default {
 
     try {
       await User.create(user);
-      User.sync();
 
-      console.log("usuario criado!");
-    } catch (error) {}
+      res.json({ message: "Usuario criado com sucesso!", user: user });
+    } catch (error) {
+      res.json({ error: error });
+    }
+  },
+
+  getById: async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    try {
+      const user = await User.findAll({ where: { id: id } });
+
+      if (user.length > 0) {
+        res.send(user);
+      } else {
+        res.json({ message: "User not found" });
+      }
+    } catch (error) {
+      res.json({ error: error });
+    }
   },
 };

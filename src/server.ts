@@ -1,34 +1,31 @@
 import express from "express";
 import cors from "cors";
-import { Sequelize } from "sequelize";
-import path from "path";
 
-import UserController from "./controller/UserController";
+const bodyParser = require("body-parser");
+
+import UserRoutes from "./routes/UserRoutes";
+import HomeRoutes from "./routes/HomeRoutes";
+
+import db from "./config/db";
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: path.resolve(__dirname, "..", "database.sqlite"),
-});
-
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.json({ message: "Hello World" });
-});
-
-app.route("/users").post(UserController.create).get(UserController.listAll);
+// rotas
+app.use("/", HomeRoutes);
+app.use("/users", UserRoutes);
 
 try {
   app.listen(port, async () => {
-    await sequelize.authenticate();
+    await db.sync();
+
     console.log("Connection has been established successfully.");
-    console.log("Listen to port 8080");
+    console.log(`Listen to port ${port} `);
   });
 } catch (error) {
   console.error("Unable to connect to the database:", error);
